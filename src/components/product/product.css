@@ -1,0 +1,27 @@
+.products{
+    display: flex;
+    margin-left: 200px;
+    border-bottom: 2px solid lightgray;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+.details h5{
+    color: blue;
+    font-size: 500;
+}
+.image-container img{
+    height: 200px;
+    margin: 20px;
+
+}
+.buttons{
+    
+    height: 40px;
+    width: 150px;
+    background-color: goldenrod;
+    border-radius: 5px;
+    border: 1px solid gray;
+    font-size: 15px;
+    
+}
