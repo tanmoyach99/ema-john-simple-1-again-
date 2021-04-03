@@ -1,11 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import fakeData from '../../fakeData';
+import { getDatabaseCart, processOrder, removeFromDatabaseCart } from '../../utilities/databaseManager';
+import Cart from '../Cart/Cart';
+import ProductReviews from '../ProductReviews/ProductReviews';
+import happyImage from '../../images/giphy.gif'
 
 const Review = () => {
+    const [cart,setCart]=useState([]);
+    const [orderPlaced,setOrderPlaced]= useState(false)
+    
+
+
+    const handlePlaceOrder=()=>{
+        setCart([]);
+        setOrderPlaced(true);
+        processOrder();
+    }
+
+    const removeProduct = (productKey)=>{
+    // console.log('remove clicked',productKey);
+    const newCart=cart.filter(pd=>pd.key!==productKey);
+    setCart(newCart);
+    removeFromDatabaseCart(productKey);
+}
+
+    useEffect(()=>{
+        const savedCarts=getDatabaseCart();
+        const productKeys=Object.keys(savedCarts);
+        const cartProducts=productKeys.map(key =>{
+            const product = fakeData.find(pd=>pd.key===key);
+            product.quantity=savedCarts[key];
+            return product;
+        });
+        
+        setCart(cartProducts);
+
+    },[]);
+
+    const thankYouImage= <img src={happyImage} alt=""/>
+    
     return (
-        <div>
-            <h1>Review is coming soon</h1>
+       <div className="shop">
+            <div className="product-container">
             
-        </div>
+            {
+                cart.map(pd=><ProductReviews
+                    key={pd.key}
+                    removeProduct={removeProduct}
+                    products={pd}></ProductReviews>)
+            }
+            {
+                orderPlaced && thankYouImage
+            }
+            
+          </div> 
+          <div className="cart-container">
+              <Cart cart={cart}>
+                  <button onClick={handlePlaceOrder} className="buttons">Place Order</button>
+              </Cart>
+
+          </div>
+       </div>
     );
 };
 
